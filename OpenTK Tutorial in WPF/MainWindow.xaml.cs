@@ -51,7 +51,7 @@ namespace OpenTK_Tutorial_in_WPF
 
         private void OpenTkControl_Loaded(object sender, RoutedEventArgs e)
         {
-            exampleScene.Prepare();
+            exampleScene.PrepareTriangle();
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

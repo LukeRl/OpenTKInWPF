@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,6 +31,7 @@ namespace OpenTK_Tutorial_in_WPF
                 0, 1, 3,   // first triangle
                 1, 2, 3    // second triangle
             };
+        private Stopwatch timer;
         public void Prepare()
         {
             VertexBufferObject = GL.GenBuffer();
@@ -56,6 +58,8 @@ namespace OpenTK_Tutorial_in_WPF
             // The EBO has now been properly setup. Go to the Render function to see how we draw our rectangle now!
 
 
+            timer = new Stopwatch();
+            timer.Start();
             shader = new Shader("../../../Shaders/shader.vert", "../../../Shaders/shader.frag");
             prepared = true;
         }
@@ -66,10 +70,12 @@ namespace OpenTK_Tutorial_in_WPF
             // This locks any buffer calls we make to the currently bound buffer
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             // Triangle of vertices
-            float[] vertices = {
-                -0.5f, -0.5f, 0.0f, //Bottom-left vertex
-                 0.5f, -0.5f, 0.0f, //Bottom-right vertex
-                 0.0f,  0.5f, 0.0f  //Top vertex
+            float[] vertices =
+            {
+                // positions        // colors
+                0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+                -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+                0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
             };
 
             shader = new Shader("../../../Shaders/shader.vert", "../../../Shaders/shader.frag");
@@ -96,8 +102,10 @@ namespace OpenTK_Tutorial_in_WPF
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
             // 3. then set our vertex attributes pointers
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+            GL.EnableVertexAttribArray(1);
 
             prepared = true;
         }
@@ -108,13 +116,19 @@ namespace OpenTK_Tutorial_in_WPF
             {
                 return;
             }
+
             GL.ClearColor(Color4.Red); // Can set this in the prepare rather than each render call
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             shader.Use();
             GL.BindVertexArray(VertexArrayObject);
-            //GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
-            GL.DrawElements(PrimitiveType.Triangles, RectangleIndices.Length, DrawElementsType.UnsignedInt, 0);
+
+            // double timeValue = timer.Elapsed.TotalSeconds;
+            // float greenValue = (float)Math.Sin(timeValue) / (2.0f + 0.5f);
+           //  int vertexColorLocation = GL.GetUniformLocation(shader.Handle, "vertexColor");
+            // GL.Uniform4(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+            // GL.DrawElements(PrimitiveType.Triangles, RectangleIndices.Length, DrawElementsType.UnsignedInt, 0);
         }
 
         public void Close()
