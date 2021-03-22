@@ -120,6 +120,13 @@ namespace OpenTK_Tutorial_in_WPF
             texture = new Texture("../../../Resources/container.png");
             texture.Use(TextureUnit.Texture0);
 
+            // Set up some transformations
+            Matrix4 rotation = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(90.0f));
+            Matrix4 scale = Matrix4.CreateScale(0.5f, 1f, 0.5f);
+            Matrix4 transform = rotation * scale;
+
+            shader.SetMatrix4("transform", transform);
+
             prepared = true;
         }
 
