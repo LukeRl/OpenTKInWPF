@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Wpf;
 
@@ -32,6 +32,9 @@ namespace OpenTK_Tutorial_in_WPF
                 1, 2, 3    // second triangle
             };
         private Stopwatch timer;
+
+        private Texture texture;
+
         public void Prepare()
         {
             VertexBufferObject = GL.GenBuffer();
@@ -72,13 +75,14 @@ namespace OpenTK_Tutorial_in_WPF
             // Triangle of vertices
             float[] vertices =
             {
-                // positions        // colors
-                0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-                -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-                0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+                //Position          Texture coordinates
+                 -0.5f,  -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+                 0.0f, 0.5f, 0.0f, 0.5f, 1.0f, // top
+                 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
             };
 
             shader = new Shader("../../../Shaders/shader.vert", "../../../Shaders/shader.frag");
+            shader.Use();
 
             /*
             // Add the vertices to the buffer's memory
@@ -102,10 +106,19 @@ namespace OpenTK_Tutorial_in_WPF
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
             // 3. then set our vertex attributes pointers
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+            //GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+            //GL.EnableVertexAttribArray(0);
+            //GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+            //GL.EnableVertexAttribArray(1);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-            GL.EnableVertexAttribArray(1);
+
+            int texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+            GL.EnableVertexAttribArray(texCoordLocation);
+
+            texture = new Texture("../../../Resources/container.png");
+            texture.Use(TextureUnit.Texture0);
 
             prepared = true;
         }
@@ -120,7 +133,6 @@ namespace OpenTK_Tutorial_in_WPF
             GL.ClearColor(Color4.Red); // Can set this in the prepare rather than each render call
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            shader.Use();
             GL.BindVertexArray(VertexArrayObject);
 
             // double timeValue = timer.Elapsed.TotalSeconds;
