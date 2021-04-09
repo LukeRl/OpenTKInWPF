@@ -37,6 +37,11 @@ namespace OpenTK_Tutorial_in_WPF
             exampleScene = new ExampleScene();
         }
 
+        private void Button1_Click(object sender, RoutedEventArgs e)
+        {
+            exampleScene.AddRectangle();
+        }
+
         private void OpenTkControl_OnRender(TimeSpan delta)
         {
             double width = OpenTkControl.ActualWidth;
@@ -51,7 +56,7 @@ namespace OpenTK_Tutorial_in_WPF
 
         private void OpenTkControl_Loaded(object sender, RoutedEventArgs e)
         {
-            exampleScene.PrepareTriangle();
+            exampleScene.Prepare();
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)

@@ -13,6 +13,6 @@
             x:Name="OpenTkControl" 
             Render="OpenTkControl_OnRender"
             Loaded="OpenTkControl_Loaded" Margin="172,110,0,0"/>
-        <Button Content="Button" HorizontalAlignment="Left" Height="38" Margin="244,91,0,0" VerticalAlignment="Top" Width="156"/>
+        <Button x:Name="button1" Click="Button1_Click" Content="Button" HorizontalAlignment="Left" Height="38" Margin="244,91,0,0" VerticalAlignment="Top" Width="156"/>
     </Grid>
 </Window>
