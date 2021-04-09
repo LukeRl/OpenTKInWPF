@@ -24,7 +24,7 @@ namespace OpenTK_Tutorial_in_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ExampleScene exampleScene;
+        private ExampleScene ExampleScene;
         public MainWindow()
         {
             InitializeComponent();
@@ -34,34 +34,45 @@ namespace OpenTK_Tutorial_in_WPF
                 MinorVersion = 3
             };
             OpenTkControl.Start(settings);
-            exampleScene = new ExampleScene();
+            ExampleScene = new ExampleScene();
         }
 
         private void Button1_Click(object sender, RoutedEventArgs e)
         {
-            exampleScene.AddRectangle();
+            ExampleScene.AddRectangle();
+        }
+
+        private void OpenTkControl_Click(object sender, MouseButtonEventArgs e)
+        {
+            Point p = e.GetPosition(OpenTkControl);
+            double x = p.X;
+            double y = p.Y;
+            Trace.WriteLine(p);
+            ExampleScene.ProcessClick(x, y);
         }
 
         private void OpenTkControl_OnRender(TimeSpan delta)
         {
             double width = OpenTkControl.ActualWidth;
             double height = OpenTkControl.ActualHeight;
+            /*
             Point p = Mouse.GetPosition(OpenTkControl);
             if (p.X <= width && p.Y <= height && p.X >= 0 && p.Y >= 0)
             {
                 Trace.WriteLine(p);
             }
-            exampleScene.Render(width, height);
+            */
+            ExampleScene.Render(width, height);
         }
 
         private void OpenTkControl_Loaded(object sender, RoutedEventArgs e)
         {
-            exampleScene.Prepare();
+            ExampleScene.Prepare();
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            exampleScene.Close();
+            ExampleScene.Close();
         }
     }
 }

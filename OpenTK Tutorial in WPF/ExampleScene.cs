@@ -12,6 +12,9 @@ namespace OpenTK_Tutorial_in_WPF
 {
     class ExampleScene
     {
+        private double CurrentWidth;
+        private double CurrentHeight;
+
         private int VertexBufferObject;
         private Shader shader;
         private int VertexArrayObject;
@@ -43,9 +46,8 @@ namespace OpenTK_Tutorial_in_WPF
 
             Matrix4 model = Matrix4.CreateTranslation(0.0f, 0.0f, 0.0f);
             // Note that we're translating the scene in the reverse direction of where we want to move.
-            Matrix4 view = Matrix4.CreateTranslation(0.0f, 0.0f, 0.0f);
-            // TODO - The clipping planes don't appear to be doing anything - why?
-            Matrix4 projection = Matrix4.CreateOrthographic(156f / 10, 38f / 10, 0.1f, 100f);
+            Matrix4 view = Matrix4.CreateTranslation(0.0f, 0.0f, -0.3f);
+            Matrix4 projection = Matrix4.CreateOrthographic(156f / 10, 38f / 10, -0.1f, 100f);
 
             shader.SetMatrix4("model", model);
             shader.SetMatrix4("view", view);
@@ -78,9 +80,13 @@ namespace OpenTK_Tutorial_in_WPF
                 return;
             }
 
+            CurrentWidth = width;
+            CurrentHeight = height;
+
             // TODO - add some check for resize - currently just live updating the projection
             // Also updates the size of the canvas - will remove any stretch effects
             Matrix4 projection = Matrix4.CreateOrthographic((float)width / 100, (float)height / 100, 0.1f, 100f);
+            //Matrix4 projection = Matrix4.CreateOrthographic((float)width / 100, (float)height / 100, 0.1f, 100f);
             shader.SetMatrix4("projection", projection);
             
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -91,6 +97,17 @@ namespace OpenTK_Tutorial_in_WPF
             {
                 GL.DrawElements(PrimitiveType.Triangles, RectangleIndices.Length, DrawElementsType.UnsignedInt, 0);
             }
+        }
+
+        public void ProcessClick(double x, double y)
+        {
+            // Convert click coordinates to canvas coordinates
+            double canvasX = (x / 100) - (CurrentWidth / 200);
+            double canvasY = -((y / 100) - (CurrentHeight / 200));
+            Trace.WriteLine((x / 100) - (CurrentWidth / 200));
+
+            Matrix4 model = Matrix4.CreateTranslation((float)canvasX, (float)canvasY, 0.0f);
+            shader.SetMatrix4("model", model);
         }
 
         public void Close()
