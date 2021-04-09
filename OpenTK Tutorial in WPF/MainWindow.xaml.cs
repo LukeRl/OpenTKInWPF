@@ -25,6 +25,7 @@ namespace OpenTK_Tutorial_in_WPF
     public partial class MainWindow : Window
     {
         private ExampleScene ExampleScene;
+        private bool IsDragging = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -42,13 +43,30 @@ namespace OpenTK_Tutorial_in_WPF
             ExampleScene.AddRectangle();
         }
 
-        private void OpenTkControl_Click(object sender, MouseButtonEventArgs e)
+        private void OpenTkControl_MouseMove(object sender, EventArgs e)
         {
-            Point p = e.GetPosition(OpenTkControl);
-            double x = p.X;
-            double y = p.Y;
-            Trace.WriteLine(p);
-            ExampleScene.ProcessClick(x, y);
+            MouseEventArgs mouseEventArgs = (MouseEventArgs) e;
+            if (mouseEventArgs.LeftButton == MouseButtonState.Pressed && !IsDragging)
+            {
+                IsDragging = true;
+                Point p = mouseEventArgs.GetPosition(OpenTkControl);
+                double x = p.X;
+                double y = p.Y;
+                ExampleScene.ProcessMouseDown(x, y);
+            }
+            else if (IsDragging)
+            {
+                Point p = mouseEventArgs.GetPosition(OpenTkControl);
+                double x = p.X;
+                double y = p.Y;
+                ExampleScene.ProcessMouseDrag(x, y);
+            }
+        }
+
+        private void OpenTkControl_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            IsDragging = false;
+            ExampleScene.ProcessMouseUp();
         }
 
         private void OpenTkControl_OnRender(TimeSpan delta)

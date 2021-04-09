@@ -10,11 +10,12 @@
         Closing="Window_Closing">
     <Grid>
         <glWpfControl:GLWpfControl 
-                x:Name="OpenTkControl" 
-                Render="OpenTkControl_OnRender"
-                Loaded="OpenTkControl_Loaded"
-                Margin="172,110,0,0"
-                MouseDown="OpenTkControl_Click"
+            x:Name="OpenTkControl" 
+            Render="OpenTkControl_OnRender"
+            Loaded="OpenTkControl_Loaded"
+            Margin="172,110,0,0"
+            MouseMove="OpenTkControl_MouseMove"
+            MouseUp="OpenTkControl_MouseUp"
         />
         <Button x:Name="button1" Click="Button1_Click" Content="Button" HorizontalAlignment="Left" Height="38" Margin="244,91,0,0" VerticalAlignment="Top" Width="156"/>
     </Grid>
