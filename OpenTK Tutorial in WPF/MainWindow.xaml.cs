@@ -46,7 +46,7 @@ namespace OpenTK_Tutorial_in_WPF
             {
                 Trace.WriteLine(p);
             }
-            exampleScene.Render();
+            exampleScene.Render(width, height);
         }
 
         private void OpenTkControl_Loaded(object sender, RoutedEventArgs e)

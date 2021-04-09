@@ -35,7 +35,7 @@ namespace OpenTK_Tutorial_in_WPF
 
         private Texture texture;
 
-        public void Prepare()
+        public void PrepareRectangle()
         {
             VertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
@@ -121,21 +121,36 @@ namespace OpenTK_Tutorial_in_WPF
             texture.Use(TextureUnit.Texture0);
 
             // Set up some transformations
-            Matrix4 rotation = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(90.0f));
-            Matrix4 scale = Matrix4.CreateScale(0.5f, 1f, 0.5f);
-            Matrix4 transform = rotation * scale;
+            //Matrix4 rotation = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(90.0f));
+            //Matrix4 scale = Matrix4.CreateScale(0.5f, 1f, 0.5f);
+            //Matrix4 transform = rotation * scale;
 
-            shader.SetMatrix4("transform", transform);
+            //shader.SetMatrix4("transform", transform);
+
+            Matrix4 model = Matrix4.CreateTranslation(0.0f, 0.0f, 0.0f);
+            // Note that we're translating the scene in the reverse direction of where we want to move.
+            Matrix4 view = Matrix4.CreateTranslation(0.0f, 0.0f, 0.0f);
+            // TODO - The clipping planes don't appear to be doing anything - why?
+            Matrix4 projection = Matrix4.CreateOrthographic(156f / 10, 38f / 10, 0.1f, 100f);
+
+            shader.SetMatrix4("model", model);
+            shader.SetMatrix4("view", view);
+            shader.SetMatrix4("projection", projection);
 
             prepared = true;
         }
 
-        public void Render()
+        public void Render(double width, double height)
         {
             if (!prepared)
             {
                 return;
             }
+
+            // Add some check for resize - currently just live updating the projection
+            // Also updates the size of the canvas - will remove any stretch effects
+            Matrix4 projection = Matrix4.CreateOrthographic((float)width / 100, (float)height / 100, 0.1f, 100f);
+            shader.SetMatrix4("projection", projection);
 
             GL.ClearColor(Color4.Red); // Can set this in the prepare rather than each render call
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
