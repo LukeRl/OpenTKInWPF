@@ -116,9 +116,10 @@ namespace OpenTK_Tutorial_in_WPF
             {
                 Vector4 movedTopRight = new Vector4(RectangleVertices[0], RectangleVertices[1], RectangleVertices[2], 1) * RectangleTransforms[i];
                 Vector4 movedBottomLeft = new Vector4(RectangleVertices[6], RectangleVertices[7], RectangleVertices[8], 1) * RectangleTransforms[i];
+                // TODO - negation to ||
                 if (canvasX >= movedBottomLeft.X && canvasX <= movedTopRight.X && canvasY <= movedTopRight.Y && canvasY >= movedBottomLeft.Y)
                 {
-                    // Move the rectangle
+                    // Identify the rectangle
                     SelectedRectangle = i;
                 }
             }
@@ -141,7 +142,7 @@ namespace OpenTK_Tutorial_in_WPF
             SelectedRectangle = -1;
         }
 
-            public void Close()
+        public void Close()
         {
             // Binding a buffer to 0 basically sets it to null, so any calls that modify a buffer without binding one first will result in a crash. This is easier to debug than accidentally modifying a buffer that we didn't want modified.
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
